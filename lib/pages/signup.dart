@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:codedbank/models/user.dart';
+import 'package:codedbank/providers/authProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -11,10 +14,14 @@ class SignUpPage extends StatefulWidget {
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
+bool chk = false;
+var _image;
+String password = '';
+String Username = '';
+
 class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
-    var _image;
     final _picker = ImagePicker();
     return Scaffold(
       // backgroundColor: Color(0xff4a8cff),
@@ -75,7 +82,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         hintText: 'Username',
                       ),
                       onChanged: (value) {
-                        //  email = value;
+                        setState(() {
+                          Username = value;
+                        });
                       },
                     ),
                   ),
@@ -102,7 +111,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         hintText: 'Password',
                       ),
                       onChanged: (value) {
-                        //password = value;
+                        password = value;
                       },
                     ),
                   ),
@@ -114,6 +123,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               source: ImageSource.gallery);
                           setState(() {
                             _image = File(image!.path);
+                            print(_image);
+                            chk = true;
                           });
                         },
                         child: Container(
@@ -121,15 +132,23 @@ class _SignUpPageState extends State<SignUpPage> {
                           height: 80,
                           margin: const EdgeInsets.only(top: 20),
                           decoration: BoxDecoration(color: Colors.blue[200]),
-                          child: Container(
-                            decoration: BoxDecoration(color: Colors.blue[200]),
-                            width: 200,
-                            height: 200,
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: Colors.grey[800],
-                            ),
-                          ),
+                          child: chk == true
+                              ? Image.file(
+                                  _image,
+                                  width: 200.0,
+                                  height: 200.0,
+                                  fit: BoxFit.fitHeight,
+                                )
+                              : Container(
+                                  decoration:
+                                      BoxDecoration(color: Colors.blue[200]),
+                                  width: 200,
+                                  height: 200,
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.grey[800],
+                                  ),
+                                ),
                         ),
                       ),
                       const Padding(
@@ -139,25 +158,26 @@ class _SignUpPageState extends State<SignUpPage> {
                     ],
                   ),
                   Spacer(),
-                  InkWell(
-                    onTap: () {},
-                    child: Container(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width / 1.2,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xff4a8cff),
-                              Color(0xFF00abff),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(50))),
-                      child: Center(
-                        child: Text(
-                          'Sign Up'.toUpperCase(),
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                  Container(
+                    height: 45,
+                    width: MediaQuery.of(context).size.width / 1.2,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Color(0xff4a8cff),
+                            Color(0xFF00abff),
+                          ],
                         ),
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        SignUp(Username, password, _image.toString());
+
+                      },
+                      child: Text(
+                        'Sign Up'.toUpperCase(),
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -187,4 +207,22 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
+ void SignUp(String name, String password, String img) async
+  {
+    print("j");
+
+    setState(() {
+      //isLoading = true;
+      User u = new User(UserName: name, image: img, password: password);
+
+      Provider.of<AuthProvider>(context, listen: false)
+          .signup(user: u);
+    });
+    setState(() {
+      //isLoading = false;
+      context.push("/homepage");
+
+    });
+  }
+
 }
