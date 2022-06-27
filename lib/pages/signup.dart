@@ -1,13 +1,20 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
-class SignUpPage extends StatelessWidget {
+class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
 
   @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+  @override
   Widget build(BuildContext context) {
-    var image;
+    var _image;
     final _picker = ImagePicker();
     return Scaffold(
       // backgroundColor: Color(0xff4a8cff),
@@ -99,32 +106,37 @@ class SignUpPage extends StatelessWidget {
                       },
                     ),
                   ),
-                  Container(
-                    width: MediaQuery.of(context).size.width / 1.2,
-                    height: 45,
-                    margin: EdgeInsets.only(top: 32),
-                    padding:
-                        EdgeInsets.only(top: 4, left: 16, right: 16, bottom: 4),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 5)
-                        ]),
-                    child: TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        icon: Icon(
-                          Icons.image,
-                          color: Color(0xff4a8cff),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          final XFile? image = await _picker.pickImage(
+                              source: ImageSource.gallery);
+                          setState(() {
+                            _image = File(image!.path);
+                          });
+                        },
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          margin: const EdgeInsets.only(top: 20),
+                          decoration: BoxDecoration(color: Colors.blue[200]),
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.blue[200]),
+                            width: 200,
+                            height: 200,
+                            child: Icon(
+                              Icons.camera_alt,
+                              color: Colors.grey[800],
+                            ),
+                          ),
                         ),
-                        hintText: 'Image',
                       ),
-                      onChanged: (value) {
-                        //password = value;
-                      },
-                    ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("Image"),
+                      )
+                    ],
                   ),
                   Spacer(),
                   InkWell(
