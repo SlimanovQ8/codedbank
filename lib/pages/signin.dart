@@ -120,6 +120,8 @@ class _SignInPageState extends State<SignInPage> {
                   Spacer(),
                   InkWell(
                     onTap: () {
+                      print(Username);
+                      print(Password);
                       SignIn(Username, Password);
 
                     },
@@ -175,16 +177,13 @@ class _SignInPageState extends State<SignInPage> {
   {
     print("j");
 
-    setState(() {
-      isLoading = true;
 
+setState(() {
+    Provider.of<AuthProvider>(context, listen: false).SignIn(name, password);
 
-      Provider.of<AuthProvider>(context, listen: false).SignIn(name, Password);
-    });
-    setState(() {
+});
       isLoading = false;
       context.push('/homepage');
 
-    });
   }
 }

@@ -1,3 +1,4 @@
+import 'package:codedbank/pages/deposit.dart';
 import 'package:codedbank/pages/homepage.dart';
 import 'package:codedbank/pages/signup.dart';
 import 'package:codedbank/pages/test.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
 
   final _router = GoRouter(routes: [
     GoRoute(path: "/", builder: (context, state) => SignInPage()),
+    GoRoute(path: "/deposit", builder: (context, state) => deposit()),
     GoRoute(path: "/signup", builder: (context, state) => SignUpPage()),
     GoRoute(path: "/homepage", builder: (context, state) => HomePage()),
   ]);

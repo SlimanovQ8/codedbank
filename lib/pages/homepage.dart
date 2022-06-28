@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
             radius: 50.0,
             backgroundColor: const Color(0xff28CC61),
             backgroundImage:
-            AssetImage(authProvider.uuser!.image) as ImageProvider,
+            NetworkImage(authProvider.uuser!.image) as ImageProvider,
           ),
           ),
               ListTile(
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                 title: const Text("Deposit"),
                 trailing: const Icon(Icons.money),
                 onTap: () {
-                  context.push("/");
+                  context.push("/deposit");
                 },
               ),
               ListTile(

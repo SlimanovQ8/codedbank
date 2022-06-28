@@ -1,22 +1,21 @@
+import 'dart:io';
+
 import 'package:codedbank/models/user.dart';
 import 'package:codedbank/pages/deposit.dart';
 import 'package:codedbank/services/client.dart';
 import 'package:dio/dio.dart';
 
 class AuthServices {
-  Future<String> signup({required User user}) async {
+  Future<String> signup({required String username , required String password, required File image}) async {
     late String token;
-    print(user.balance);
-    print(user.id);
-    print(user.username);
-    print(user.password);
+
 
     try {
       FormData data = FormData.fromMap({
-        "username": user.username,
-        "password": user.password,
-        "balance": user.balance,
-        //"image": await MultipartFile.fromFile(user.image),
+        "username": username,
+        "password": password,
+        "balance": 0,
+        "image": await MultipartFile.fromFile(image.path),
       });
       Response response = await client.dio.post('/signup', data: data);
       token = response.data["token"];
@@ -52,14 +51,13 @@ class AuthServices {
   Future <String> SignIn(String Username, String Password) async {
     String token = '';
 
-    //User U = User(username: Username, password: Password);
     try {
-    //  Response Res = await client.dio.post('/signin', data: U.toJson());
+      Response Res = await client.dio.post('/signin', data: {"username": Username, "password": Password});
 
-      /*   print(Res);
+       print(Res.statusCode);
       print('ed');
       print(Res.data);
-*/
+
       //token = Res.data["token"];
       print(token);
     }

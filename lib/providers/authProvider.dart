@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:codedbank/models/user.dart';
 import 'package:codedbank/services/auth_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,18 +16,22 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
-  void signup({required User user}) async {
-    token = await AuthServices().signup(user: user);
-    uuser = User(username: user.username, image: user.image, balance: user.balance, password: user.password );
+  void signup({required String username , required String password, required File image}) async {
+    token = await AuthServices().signup(username: username, password: password, image: image);
+    uuser = User.fromJson(Jwt.parseJwt(token));
 
     print(token);
     setToken(token);
     notifyListeners();
   }
- void SignIn(String Username, String Password) async {
+ Future <void> SignIn(String Username, String Password) async {
    AuthServices AS = AuthServices();
    token = await AS.SignIn(Username, Password);
-  // uuser = User(username: Username, password: Password );
+   print(token);
+
+   uuser = await User.fromJson(Jwt.parseJwt(token));
+
+   // uuser = User(username: Username, password: Password );
    print(token);
    setToken(token);
    notifyListeners();

@@ -5,7 +5,7 @@ import 'package:codedbank/models/user.dart';
 import 'package:codedbank/providers/authProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart' ;
 import 'package:provider/provider.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -16,7 +16,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 bool chk = false;
-var _image;
+File? _image;
 String password = '';
 String Username = '';
 
@@ -138,7 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           decoration: BoxDecoration(color: Colors.blue[200]),
                           child: chk == true
                               ? Image.file(
-                                  _image,
+                                  _image!,
                                   width: 200.0,
                                   height: 200.0,
                                   fit: BoxFit.fitHeight,
@@ -175,7 +175,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.all(Radius.circular(50))),
                     child: ElevatedButton(
                       onPressed: () {
-                        SignUp(Username, password, _image.toString());
+                        SignUp(Username, password, _image!);
 
                       },
                       child: Text(
@@ -211,16 +211,16 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
- void SignUp(String name, String password, String img) async
+ void SignUp(String name, String password, File img) async
   {
     print("j");
 
     setState(() {
       //isLoading = true;
-      User u = new User(username: name, image: img, password: password, balance: 1000);
+      // User u = new User(username: name, image: img, password: password, balance: 1000);
 
       Provider.of<AuthProvider>(context, listen: false)
-          .signup(user: u);
+          .signup(username: name, password: password, image: img);
     });
     setState(() {
       //isLoading = false;
