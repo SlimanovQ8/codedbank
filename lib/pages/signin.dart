@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:codedbank/models/user.dart';
 
-class SignInPage extends StatelessWidget {
+import '../providers/authProvider.dart';
+
+class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
 
   @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  @override
+  String Username = '';
+  String Password = '';
   Widget build(BuildContext context) {
     return Scaffold(
       // backgroundColor: Color(0xff4a8cff),
@@ -65,7 +76,7 @@ class SignInPage extends StatelessWidget {
                         hintText: 'Username',
                       ),
                       onChanged: (value) {
-                        //  email = value;
+                         Username = value;
                       },
                     ),
                   ),
@@ -92,7 +103,7 @@ class SignInPage extends StatelessWidget {
                         hintText: 'Password',
                       ),
                       onChanged: (value) {
-                        //password = value;
+                        Password = value;
                       },
                     ),
                   ),
@@ -108,7 +119,10 @@ class SignInPage extends StatelessWidget {
                   ),
                   Spacer(),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      SignIn(Username, Password);
+
+                    },
                     child: Container(
                       height: 45,
                       width: MediaQuery.of(context).size.width / 1.2,
@@ -155,5 +169,22 @@ class SignInPage extends StatelessWidget {
         ),
       ),
     );
+  }
+  bool isLoading = false;
+  void SignIn(String name, String password) async
+  {
+    print("j");
+
+    setState(() {
+      isLoading = true;
+
+
+      Provider.of<AuthProvider>(context, listen: false).SignIn(name, Password);
+    });
+    setState(() {
+      isLoading = false;
+      context.push('/homepage');
+
+    });
   }
 }

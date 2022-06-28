@@ -1,87 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
-import '../providers/authProvider.dart';
+void main() => runApp(test());
 
-class HomePage extends StatefulWidget {
-  const HomePage({ Key? key }) : super(key: key);
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
+class test extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Hello ..."),
-        
-      ),
-      drawer:  Drawer(
-        child: Consumer<AuthProvider>(
-          builder: (context, authProvider, child) => authProvider.isAuth
-              ? ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                child: Text("Welcome ${authProvider.uuser!.UserName}"),
-                decoration: const BoxDecoration(
-                  color: Colors.blue,
+
+    return MaterialApp(
+      home: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height:400,
+                    child: Flexible(
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                          children: [
+                          Card(
+
+                          color: Color(0xff343b4b),
+
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ),
-              ListTile(
-                title: const Text("Logout"),
-                trailing: const Icon(Icons.logout),
-                onTap: () {
-                  Provider.of<AuthProvider>(context, listen: false).logout();
-
-                },
-              ),
-            ],
-          )
-              : ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                child: Text("Sign in please"),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                ),
-              ),
-              ListTile(
-                title: const Text("Signin"),
-                trailing: const Icon(Icons.login),
-                onTap: () {
-                  context.push("/");
-                },
-              ),
-              ListTile(
-                title: const Text("Signup"),
-                trailing: const Icon(Icons.how_to_reg),
-                onTap: () {
-                  GoRouter.of(context).push('/signup');
-                },
-              )
-            ],
-          ),
-        ),
-      ),
-      body: ListView(
-              children: [
-                Card(
-
-                  color: Color(0xff343b4b),
-
-                  clipBehavior: Clip.antiAlias,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  elevation: 10,
-                  margin: EdgeInsets.all(7),
-                  child: Column(
-                    children: <Widget>[
+                elevation: 10,
+                margin: EdgeInsets.all(7),
+                child: Column(
+                  children: <Widget>[
                       ListTile(
                         leading:
                         ImageIcon(
@@ -186,43 +135,52 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
 
-                    ],
-                  ),
+                  ],
                 ),
-  /*     GridView.builder(
-            padding: const EdgeInsets.all(20.0),
-            itemCount: 3,
-            itemBuilder: (ctx, i) =>
-               Center(
-                 child: GridTile(
-                   child: RaisedButton(
-                     onPressed: ()
-                     {
-                       print("s");
-                     },
-                     color: Color(0xfffffafa),
-                     child: Image.asset("assets/images/codedlogo.png", height: 120,)),
+              ),
+            ]),
+                    )
+                  ),
+                  Container(
+                    height: 200,
+                    child: GridView.builder(
+                      padding: const EdgeInsets.all(20.0),
+                      itemCount: 3,
+                      itemBuilder: (ctx, i) =>
+                          Center(
+                            child: GridTile(
+                              child: RaisedButton(
+                                  onPressed: ()
+                                  {
+                                    print("s");
+                                  },
+                                  color: Color(0xfffffafa),
+                                  child: Image.asset("assets/images/codedlogo.png", height: 120,)),
 
 
-                 ),
-               ),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: MediaQuery
-                  .of(context)
-                  .size
-                  .width /
-                  (MediaQuery
-                      .of(context)
-                      .size
-                      .height / 1.6),
-              crossAxisSpacing: 25,
-              mainAxisSpacing: 12.5,
+                            ),
+                          ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: MediaQuery
+                            .of(context)
+                            .size
+                            .width /
+                            (MediaQuery
+                                .of(context)
+                                .size
+                                .height / 1.6),
+                        crossAxisSpacing: 25,
+                        mainAxisSpacing: 12.5,
+                      ),
+                    )
+                  )
+                ],
+              ),
             ),
-*/        //)
-              ],
-            ),
-          
+          ),
+        ),
+      ),
     );
   }
 }

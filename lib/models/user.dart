@@ -7,7 +7,7 @@ class User {
   int? id;
   String UserName;
   String? password;
-  String image;
+  String? image;
 
 
 factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -19,7 +19,7 @@ factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
     this.id,
     required this.UserName,
     password,
-    required this.image,
+      image,
   });
 
   

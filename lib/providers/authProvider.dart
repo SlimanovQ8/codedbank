@@ -22,6 +22,15 @@ class AuthProvider extends ChangeNotifier {
     setToken(token);
     notifyListeners();
   }
+ void SignIn(String Username, String Password) async {
+   AuthServices AS = AuthServices();
+   token = await AS.SignIn(Username, Password);
+   uuser = User(UserName: Username);
+   print(token);
+   setToken(token);
+   notifyListeners();
+ }
+
   bool get isAuth {
     if (token.isNotEmpty && Jwt.getExpiryDate(token)!.isAfter(DateTime.now())) {
       //user = User.fromJson(Jwt.parseJwt(token));

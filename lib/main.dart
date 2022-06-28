@@ -1,5 +1,6 @@
 import 'package:codedbank/pages/homepage.dart';
 import 'package:codedbank/pages/signup.dart';
+import 'package:codedbank/pages/test.dart';
 import 'package:codedbank/providers/authProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
   }
 
   final _router = GoRouter(routes: [
-    GoRoute(path: "/", builder: (context, state) => SignInPage()),
+    GoRoute(path: "/", builder: (context, state) => HomePage()),
     GoRoute(path: "/signup", builder: (context, state) => SignUpPage()),
     GoRoute(path: "/homepage", builder: (context, state) => HomePage()),
   ]);
