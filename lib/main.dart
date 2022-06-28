@@ -29,11 +29,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp.router(
       routeInformationParser: _router.routeInformationParser,
       routerDelegate: _router.routerDelegate,
+
+
+
     );
   }
 
-  final _router = GoRouter(routes: [
-    GoRoute(path: "/", builder: (context, state) => SignInPage()),
+  AuthProvider ap = AuthProvider();
+  final _router = GoRouter(
+    initialLocation: 1==2 ? "/homepage" : "/",
+      routes:
+  [
+
+    GoRoute(path: "/", builder: (context, state) =>  SignInPage()),
     GoRoute(path: "/deposit", builder: (context, state) => deposit()),
     GoRoute(path: "/signup", builder: (context, state) => SignUpPage()),
     GoRoute(path: "/homepage", builder: (context, state) => HomePage()),

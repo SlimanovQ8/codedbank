@@ -26,19 +26,29 @@ class AuthServices {
     return token;
   }
 
-  Future<double> deposit({required deposit}) async {
+  Future<bool> deposit({required deposit, required id}) async {
     late String token;
+    bool check = false;
 
     try {
 
 
-      Response response = await client.dio.put('/deposit/', data: {"amount": 100});
+      Response R = await client.dio.get('/');
+
+      print(R.data[id--]['balance']);
+      int total = deposit + R.data[id--]['balance'];
+      print("Total: $total");
+      Response response = await client.dio.put('/deposit/', data: {"amount": deposit  });
+      check = true;
+
+
+
       //token = response.data["token"];
       print(deposit);
     } on DioError catch (error) {
       print(error);
     }
-    return deposit;
+    return check;
   }
 
   Future <String> SignIn(String Username, String Password) async {
@@ -57,6 +67,7 @@ class AuthServices {
     }
     on DioError catch (e) {
       print(e );
+      return token;
     }
     return token;
   }

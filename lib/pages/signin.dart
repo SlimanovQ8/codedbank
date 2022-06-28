@@ -1,3 +1,4 @@
+import 'package:codedbank/pages/deposit.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -125,7 +126,7 @@ class _SignInPageState extends State<SignInPage> {
                       SignIn(Username, Password);
 
                     },
-                    child: Container(
+                    child: isLoading == false? Container(
                       height: 45,
                       width: MediaQuery.of(context).size.width / 1.2,
                       decoration: BoxDecoration(
@@ -136,14 +137,11 @@ class _SignInPageState extends State<SignInPage> {
                             ],
                           ),
                           borderRadius: BorderRadius.all(Radius.circular(50))),
-                      child: Center(
-                        child: Text(
-                          'Login'.toUpperCase(),
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
+                      child: T.Buttons("Login")
+                    ):
+                        Center(
+                            child: CircularProgressIndicator(),
+                        )
                   ),
                 ],
               ),
@@ -155,7 +153,7 @@ class _SignInPageState extends State<SignInPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text("Dnon't have an account ?"),
+                  Text("Don't have an account ?"),
                   Text(
                     "Sign Up",
                     style: TextStyle(color: Color(0xff4a8cff)),
@@ -175,13 +173,45 @@ class _SignInPageState extends State<SignInPage> {
   bool isLoading = false;
   void SignIn(String name, String password) async
   {
-    print("j");
+    setState(() {
+      isLoading = true;
+    });
 
 
-    Provider.of<AuthProvider>(context, listen: false).SignIn(name, password);
+   bool? check = await Provider.of<AuthProvider>(context, listen: false).SignIn(name, password);
 
-      isLoading = false;
-      context.push('/homepage');
+   if (check == true)
+     {
+       showDialog(
+           context: context,
+           builder: (BuildContext context) =>
+               AlertDialog(
+                 title: Text("Login failed!"),
+                 content: Text("Incorrect username or password"),
+                 actions: [
+                   TextButton(
+                     style: TextButton.styleFrom(
+                         primary: Colors.blue
+                     ),
+                     onPressed: () {
 
+                       setState(() {
+                         context.pop();
+                       });
+                     },
+
+                     child: Text('Ok'),
+                   ),
+
+
+                 ],
+               )
+       );
+       isLoading = false;
+     }
+   else {
+     isLoading = false;
+     context.push('/homepage');
+   }
   }
 }

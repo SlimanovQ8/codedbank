@@ -11,6 +11,7 @@ class AuthProvider extends ChangeNotifier {
   String token = "";
   User? user;
   AuthServices AS = AuthServices();
+  bool? check;
   // authProvider() {
   //   SharedPreferences.getInstance().then((value) {
   //     token = value.getString("token") ?? "";
@@ -26,29 +27,35 @@ class AuthProvider extends ChangeNotifier {
     setToken(token);
     notifyListeners();
   }
-  Future <void> SignIn(String Username, String Password) async {
+  Future <bool?> SignIn(String Username, String Password) async {
 
     token = await AuthServices().SignIn(Username, Password);
-    print(token);
-
-    //user = await User.fromJson(Jwt.parseJwt(token));
-
-    // uuser = User(username: Username, password: Password );
-    // print(token);
-    // setToken(token);
-    // notifyListeners();
-  }
-  Future <void> Deposit(double deposit) async {
-
-    await AuthServices().deposit(deposit: deposit);
+    if(token.length > 2)
+      return false;
     print(token);
 
     user = await User.fromJson(Jwt.parseJwt(token));
 
     // uuser = User(username: Username, password: Password );
+    // print(token);
+    // setToken(token);
+    notifyListeners();
+    return true;
+  }
+  Future<bool?> Deposit(int deposit, int id) async {
+
+    check = await AuthServices().deposit(deposit: deposit, id: id);
+    print(token);
+
+
+    //user = await User.fromJson(Jwt.parseJwt(token));
+
+    // uuser = User(username: Username, password: Password );
     print(token);
     setToken(token);
     notifyListeners();
+
+    return check;
   }
 
   bool get isAuth {

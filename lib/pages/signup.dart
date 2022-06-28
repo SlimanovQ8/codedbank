@@ -2,11 +2,14 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:codedbank/models/user.dart';
+import 'package:codedbank/pages/deposit.dart';
 import 'package:codedbank/providers/authProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart' ;
 import 'package:provider/provider.dart';
+
+import '../widgets/TextField.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({Key? key}) : super(key: key);
@@ -16,9 +19,12 @@ class SignUpPage extends StatefulWidget {
 }
 
 bool chk = false;
+bool isLoading = false;
 File? _image;
 String password = '';
 String Username = '';
+TextFieldForms T = TextFieldForms();
+
 
 class _SignUpPageState extends State<SignUpPage> {
   @override
@@ -162,28 +168,28 @@ class _SignUpPageState extends State<SignUpPage> {
                     ],
                   ),
                   Spacer(),
-                  Container(
-                    height: 45,
-                    width: MediaQuery.of(context).size.width / 1.2,
-                    decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xff4a8cff),
-                            Color(0xFF00abff),
-                          ],
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(50))),
-                    child: ElevatedButton(
-                      onPressed: () {
+                  InkWell(
+                      onTap: () {
+                        print(Username);
                         SignUp(Username, password, _image!);
 
                       },
-                      child: Text(
-                        'Sign Up'.toUpperCase(),
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+                      child: isLoading == false? Container(
+                          height: 45,
+                          width: MediaQuery.of(context).size.width / 1.2,
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color(0xff4a8cff),
+                                  Color(0xFF00abff),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(50))),
+                          child: T.Buttons("Sign up")
+                      ):
+                      Center(
+                        child: CircularProgressIndicator(),
+                      )
                   ),
                 ],
               ),
@@ -215,13 +221,10 @@ class _SignUpPageState extends State<SignUpPage> {
   {
     print("j");
 
-    setState(() {
-      //isLoading = true;
-      // User u = new User(username: name, image: img, password: password, balance: 1000);
 
       Provider.of<AuthProvider>(context, listen: false)
           .SignUp(username: name, password: password, image: img);
-    });
+
     setState(() {
       //isLoading = false;
       context.push("/homepage");
