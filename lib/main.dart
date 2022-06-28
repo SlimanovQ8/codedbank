@@ -23,6 +23,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+
     return MaterialApp.router(
       routeInformationParser: _router.routeInformationParser,
       routerDelegate: _router.routerDelegate,
@@ -30,7 +32,7 @@ class MyApp extends StatelessWidget {
   }
 
   final _router = GoRouter(routes: [
-    GoRoute(path: "/", builder: (context, state) => HomePage()),
+    GoRoute(path: "/", builder: (context, state) => SignInPage()),
     GoRoute(path: "/signup", builder: (context, state) => SignUpPage()),
     GoRoute(path: "/homepage", builder: (context, state) => HomePage()),
   ]);

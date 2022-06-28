@@ -16,7 +16,7 @@ class AuthProvider extends ChangeNotifier {
 
   void signup({required User user}) async {
     token = await AuthServices().signup(user: user);
-    uuser = User(UserName: user.UserName, image: user.image);
+    uuser = User(username: user.username, image: user.image, balance: user.balance, password: user.password );
 
     print(token);
     setToken(token);
@@ -25,7 +25,7 @@ class AuthProvider extends ChangeNotifier {
  void SignIn(String Username, String Password) async {
    AuthServices AS = AuthServices();
    token = await AS.SignIn(Username, Password);
-   uuser = User(UserName: Username);
+  // uuser = User(username: Username, password: Password );
    print(token);
    setToken(token);
    notifyListeners();
@@ -33,7 +33,7 @@ class AuthProvider extends ChangeNotifier {
 
   bool get isAuth {
     if (token.isNotEmpty && Jwt.getExpiryDate(token)!.isAfter(DateTime.now())) {
-      //user = User.fromJson(Jwt.parseJwt(token));
+      //8uuser = User.fromJson(Jwt.parseJwt(token));
 
       return true;
     } else

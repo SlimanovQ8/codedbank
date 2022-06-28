@@ -5,9 +5,10 @@ part "user.g.dart";
 @JsonSerializable()
 class User {
   int? id;
-  String UserName;
-  String? password;
-  String? image;
+  String username;
+  String password;
+  String image;
+  int balance;
 
 
 factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -17,9 +18,10 @@ factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   User({
     this.id,
-    required this.UserName,
-    password,
-      image,
+    required this.username,
+    required this.password,
+    required this.image,
+    required this.balance,
   });
 
   

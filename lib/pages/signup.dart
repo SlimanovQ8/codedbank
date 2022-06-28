@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:codedbank/models/user.dart';
 import 'package:codedbank/providers/authProvider.dart';
@@ -123,7 +124,10 @@ class _SignUpPageState extends State<SignUpPage> {
                               source: ImageSource.gallery);
                           setState(() {
                             _image = File(image!.path);
-                            print(_image);
+                           // Uint8List memoryImage = File(_image).readAsBytesSync() as ;
+
+                          //  print(memoryImage);
+                          //  print(_image);
                             chk = true;
                           });
                         },
@@ -213,7 +217,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
     setState(() {
       //isLoading = true;
-      User u = new User(UserName: name, image: img, password: password);
+      User u = new User(username: name, image: img, password: password, balance: 1000);
 
       Provider.of<AuthProvider>(context, listen: false)
           .signup(user: u);
