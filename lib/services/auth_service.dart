@@ -58,7 +58,7 @@ class AuthServices {
       print('ed');
       print(Res.data);
 
-      //token = Res.data["token"];
+      token = Res.data["token"];
       print(token);
     }
     on DioError catch (e) {

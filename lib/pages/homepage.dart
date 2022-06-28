@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
             radius: 50.0,
             backgroundColor: const Color(0xff28CC61),
             backgroundImage:
-            NetworkImage(authProvider.uuser!.image) as ImageProvider,
+            NetworkImage(authProvider.uuser!.image!) as ImageProvider,
           ),
           ),
               ListTile(

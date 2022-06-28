@@ -7,7 +7,7 @@ class User {
   int? id;
   String username;
   String? password;
-  String image;
+  String? image;
   int balance;
 
 
