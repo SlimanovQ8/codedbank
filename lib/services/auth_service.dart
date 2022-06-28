@@ -14,7 +14,7 @@ class AuthServices {
       FormData data = FormData.fromMap({
         "username": username,
         "password": password,
-        "balance": 0,
+
         "image": await MultipartFile.fromFile(image.path),
       });
       Response response = await client.dio.post('/signup', data: data);
@@ -26,32 +26,26 @@ class AuthServices {
     return token;
   }
 
-  Future<String> deposit({required User user}) async {
+  Future<double> deposit({required deposit}) async {
     late String token;
-    print(user.balance);
-    print(user.id);
-    print(user.username);
-    print(user.password);
 
     try {
-      FormData data = FormData.fromMap({
 
-        "balance": user.balance,
-        "image": '/data/user/0/com.example.codedbank/cache/image_picker8789375785740143711.png',
-      });
-      Response response = await client.dio.put('/deposit/${user.id}', data: data);
-      token = response.data["token"];
-      print(token);
+
+      Response response = await client.dio.put('/deposit/', data: {"amount": 100});
+      //token = response.data["token"];
+      print(deposit);
     } on DioError catch (error) {
       print(error);
     }
-    return token;
+    return deposit;
   }
 
   Future <String> SignIn(String Username, String Password) async {
     String token = '';
 
     try {
+      print("SErvice");
       Response Res = await client.dio.post('/signin', data: {"username": Username, "password": Password});
 
        print(Res.statusCode);
@@ -62,7 +56,7 @@ class AuthServices {
       print(token);
     }
     on DioError catch (e) {
-      print(e.message);
+      print(e );
     }
     return token;
   }

@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:codedbank/services/client.dart';
+import 'package:dio/dio.dart';
 import 'package:codedbank/models/user.dart';
 import 'package:codedbank/services/auth_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,39 +9,55 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
   String token = "";
-  User? uuser;
-  authProvider() {
-    SharedPreferences.getInstance().then((value) {
-      token = value.getString("token") ?? "";
-      notifyListeners();
-    });
-  }
+  User? user;
+  AuthServices AS = AuthServices();
+  // authProvider() {
+  //   SharedPreferences.getInstance().then((value) {
+  //     token = value.getString("token") ?? "";
+  //     notifyListeners();
+  //   });
+  // }
 
-  void signup({required String username , required String password, required File image}) async {
+  void SignUp({required String username , required String password, required File image}) async {
     token = await AuthServices().signup(username: username, password: password, image: image);
-    uuser = User.fromJson(Jwt.parseJwt(token));
+   // user = User.fromJson(Jwt.parseJwt(token));
 
     print(token);
     setToken(token);
     notifyListeners();
   }
- Future <void> SignIn(String Username, String Password) async {
-   AuthServices AS = AuthServices();
-   token = await AS.SignIn(Username, Password);
-   print(token);
+  Future <void> SignIn(String Username, String Password) async {
 
-   uuser = await User.fromJson(Jwt.parseJwt(token));
+    token = await AuthServices().SignIn(Username, Password);
+    print(token);
 
-   // uuser = User(username: Username, password: Password );
-   print(token);
-   setToken(token);
-   notifyListeners();
- }
+    //user = await User.fromJson(Jwt.parseJwt(token));
+
+    // uuser = User(username: Username, password: Password );
+    // print(token);
+    // setToken(token);
+    // notifyListeners();
+  }
+  Future <void> Deposit(double deposit) async {
+
+    await AuthServices().deposit(deposit: deposit);
+    print(token);
+
+    user = await User.fromJson(Jwt.parseJwt(token));
+
+    // uuser = User(username: Username, password: Password );
+    print(token);
+    setToken(token);
+    notifyListeners();
+  }
 
   bool get isAuth {
     if (token.isNotEmpty && Jwt.getExpiryDate(token)!.isAfter(DateTime.now())) {
-      //8uuser = User.fromJson(Jwt.parseJwt(token));
+      user = User.fromJson(Jwt.parseJwt(token));
 
+      client.dio.options.headers = {
+        HttpHeaders.authorizationHeader: 'Bearer $token',
+      };
       return true;
     } else
       return false;

@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.zero,
             children: [
           UserAccountsDrawerHeader(
-          accountName: Text("Hi ${authProvider.uuser!.username}"),
+          accountName: Text("Hi ${authProvider.user!.username}"),
           accountEmail: Text(""),
           decoration: BoxDecoration(color: Color(0xff6894F0)),
 
@@ -34,7 +34,8 @@ class _HomePageState extends State<HomePage> {
             radius: 50.0,
             backgroundColor: const Color(0xff28CC61),
             backgroundImage:
-            NetworkImage(authProvider.uuser!.image!) as ImageProvider,
+
+            NetworkImage(authProvider.user!.image!) as ImageProvider,
           ),
           ),
               ListTile(
@@ -70,6 +71,8 @@ class _HomePageState extends State<HomePage> {
                 trailing: const Icon(Icons.logout),
                 onTap: () {
                   Provider.of<AuthProvider>(context, listen: false).logout();
+
+                  context.push("/");
 
                 },
               ),
@@ -162,7 +165,7 @@ class _HomePageState extends State<HomePage> {
                                             SizedBox(
                                               width: 25,
                                             ),
-                                            Text("${authProvider.uuser!.balance}",
+                                            Text("${authProvider.user!.balance}",
                                                 textAlign: TextAlign.center,
                                                 style: TextStyle(fontSize: 14,
                                                   color: Colors.white,

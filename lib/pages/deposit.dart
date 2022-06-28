@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/authProvider.dart';
@@ -71,11 +72,12 @@ class _depositState extends State<deposit> {
                           Icons.person,
                           color: Color(0xff4a8cff),
                         ),
-                        hintText: 'Username',
+                        hintText: 'Deposit',
                       ),
                       onChanged: (value) {
                         setState(() {
-                          amount = value as double;
+                          amount  = double.parse(value);
+                          
                         });
                       },
                     ),
@@ -95,6 +97,7 @@ class _depositState extends State<deposit> {
                     child: ElevatedButton(
                       onPressed: () {
 
+                        deposit(amount);
                       },
                       child: Text(
                         'Sign Up'.toUpperCase(),
@@ -115,15 +118,14 @@ class _depositState extends State<deposit> {
   {
     print("j");
 
-    // setState(() {
-    //
-    //
-    //   Provider.of<AuthProvider>(context, listen: false).(name, Password);
-    // });
-    // setState(() {
-    //   isLoading = false;
-    //   context.push('/homepage');
-    //
-    // });
+    setState(() {
+
+
+      Provider.of<AuthProvider>(context, listen: false).Deposit(deposit);
+    });
+    setState(() {
+      context.push('/homepage');
+
+    });
   }
 }

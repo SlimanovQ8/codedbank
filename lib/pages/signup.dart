@@ -220,7 +220,7 @@ class _SignUpPageState extends State<SignUpPage> {
       // User u = new User(username: name, image: img, password: password, balance: 1000);
 
       Provider.of<AuthProvider>(context, listen: false)
-          .signup(username: name, password: password, image: img);
+          .SignUp(username: name, password: password, image: img);
     });
     setState(() {
       //isLoading = false;

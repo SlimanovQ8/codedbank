@@ -178,10 +178,8 @@ class _SignInPageState extends State<SignInPage> {
     print("j");
 
 
-setState(() {
     Provider.of<AuthProvider>(context, listen: false).SignIn(name, password);
 
-});
       isLoading = false;
       context.push('/homepage');
 
