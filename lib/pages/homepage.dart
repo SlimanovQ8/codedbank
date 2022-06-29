@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                       trailing: const Icon(Icons.login,
                           color: Color.fromRGBO(240, 123, 63, 1)),
                       onTap: () {
-                        context.push("/");
+                        context.push("/withdraw");
                       },
                     ),
                     ListTile(
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                       trailing: const Icon(Icons.change_circle_outlined,
                           color: Color.fromRGBO(240, 123, 63, 1)),
                       onTap: () {
-                        context.push("/");
+                        context.push("/transfer");
                       },
                     ),
                     ListTile(
