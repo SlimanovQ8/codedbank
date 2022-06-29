@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:codedbank/pages/transactions.dart';
 import 'package:codedbank/services/client.dart';
 import 'package:dio/dio.dart';
 import 'package:codedbank/models/user.dart';
@@ -7,10 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/transactions.dart';
+
 class AuthProvider extends ChangeNotifier {
   String token = "";
   User? user;
   AuthServices AS = AuthServices();
+  List <Transctions> transctions = [];
   bool check = false;
   // authProvider() {
   //   SharedPreferences.getInstance().then((value) {
@@ -19,6 +23,12 @@ class AuthProvider extends ChangeNotifier {
   //   });
   // }
 
+  Future<void> getTranscations() async
+  {
+    transctions = await AS.getTransactions();
+
+    notifyListeners();
+  }
   void SignUp({required String username , required String password, required File image}) async {
     token = await AuthServices().signup(username: username, password: password, image: image);
    // user = User.fromJson(Jwt.parseJwt(token));

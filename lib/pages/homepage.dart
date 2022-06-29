@@ -95,6 +95,16 @@ class _HomePageState extends State<HomePage> {
                         context.push("/transfer");
                       },
                     ),
+        ListTile(
+          title: const Text("Transactions",
+              style: TextStyle(
+                  color: Color.fromRGBO(240, 123, 63, 1))),
+          trailing: const Icon(Icons.change_circle_outlined,
+              color: Color.fromRGBO(240, 123, 63, 1)),
+          onTap: () {
+            context.push("/transaction");
+          },
+        ),
                     ListTile(
                       title: const Text("Logout",
                           style: TextStyle(

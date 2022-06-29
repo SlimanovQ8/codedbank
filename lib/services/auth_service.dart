@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:codedbank/models/transactions.dart';
 import 'package:codedbank/models/user.dart';
 import 'package:codedbank/pages/deposit.dart';
 import 'package:codedbank/services/client.dart';
@@ -141,15 +142,19 @@ class AuthServices {
     }
     return token;
   }
-  Future getTransactions() async {
+  Future <List<Transctions>> getTransactions() async {
     try {
 
       Response R = await client.dio.get('/transactions');
+      List<Transctions> transcations = (R.data as List).map((e) => Transctions.fromJson(e)).toList();
+      return transcations;
+
 
     }
     on DioError catch (e)
     {
 
     }
+    return [];
   }
 }
