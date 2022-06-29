@@ -11,7 +11,7 @@ class AuthProvider extends ChangeNotifier {
   String token = "";
   User? user;
   AuthServices AS = AuthServices();
-  bool? check;
+  bool check = false;
   // authProvider() {
   //   SharedPreferences.getInstance().then((value) {
   //     token = value.getString("token") ?? "";
@@ -57,6 +57,45 @@ class AuthProvider extends ChangeNotifier {
 
     return check;
   }
+
+
+  Future<bool> withdraw(int withdraw, int id) async {
+
+    check = await AuthServices().withdraw(withdraw: withdraw, id: id);
+    print(token);
+    print(check);
+
+
+    //user = await User.fromJson(Jwt.parseJwt(token));
+
+    // uuser = User(username: Username, password: Password );
+    print(token);
+    setToken(token);
+    notifyListeners();
+
+    print(check);
+
+    return check;
+  }
+  Future<bool> transfer(int withdraw, String username, int id) async {
+
+    check = await AuthServices().transfer(withdraw: withdraw, username: username, id: id );
+    print(token);
+    print(check);
+
+
+    //user = await User.fromJson(Jwt.parseJwt(token));
+
+    // uuser = User(username: Username, password: Password );
+    print(token);
+    setToken(token);
+    notifyListeners();
+
+    print(check);
+
+    return check;
+  }
+
 
   bool get isAuth {
     if (token.isNotEmpty && Jwt.getExpiryDate(token)!.isAfter(DateTime.now())) {

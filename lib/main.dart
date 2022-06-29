@@ -2,6 +2,9 @@ import 'package:codedbank/pages/deposit.dart';
 import 'package:codedbank/pages/homepage.dart';
 import 'package:codedbank/pages/signup.dart';
 import 'package:codedbank/pages/test.dart';
+import 'package:codedbank/pages/transactions.dart';
+import 'package:codedbank/pages/transfer.dart';
+import 'package:codedbank/pages/withdraw.dart';
 import 'package:codedbank/providers/authProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -35,6 +38,9 @@ class MyApp extends StatelessWidget {
       GoRouter(initialLocation: 1 == 2 ? "/homepage" : "/", routes: [
     GoRoute(path: "/", builder: (context, state) => SignInPage()),
     GoRoute(path: "/deposit", builder: (context, state) => deposit()),
+    GoRoute(path: "/withdraw", builder: (context, state) => Withdraw()),
+    GoRoute(path: "/transfer", builder: (context, state) => Transfer()),
+    GoRoute(path: "/transaction", builder: (context, state) => transactions()),
     GoRoute(path: "/signup", builder: (context, state) => SignUpPage()),
     GoRoute(path: "/homepage", builder: (context, state) => HomePage()),
   ]);

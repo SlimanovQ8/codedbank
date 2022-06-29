@@ -51,6 +51,76 @@ class AuthServices {
     return check;
   }
 
+
+  Future<bool> withdraw({required withdraw, required id}) async {
+    late String token;
+    bool check = false;
+
+    print(id);
+    try {
+      Response R = await client.dio.get('/');
+
+      print(R.data[id--]['balance']);
+      int amount = R.data[id--]['balance'];
+      if (amount < withdraw) {
+        print("Check: $check");
+        return check;
+      }
+      else {
+        int total = withdraw + R.data[id--]['balance'];
+        print("Total: $total");
+        Response response = await client.dio.put(
+            '/withdraw/', data: {"amount": withdraw});
+        check = true;
+
+
+        //token = response.data["token"];
+        print(withdraw);
+      }
+    }
+    on DioError catch (error) {
+      print(error);
+    }
+    return check;
+
+  }
+  Future<bool> transfer({required withdraw, required username, required id}) async {
+    late String token;
+    bool check = false;
+
+    int index = id - 1;
+    try {
+      Response R = await client.dio.get('/');
+
+
+      print(index);
+      print(R.data[index]['balance']);
+      int amount = R.data[index]['balance'];
+      print("amount: $amount");
+
+      print("Check: $check");
+          if (amount < withdraw) {
+        print("Check: $check");
+        return check;
+      }
+      else {
+        int total = withdraw + R.data[index]['balance'];
+        print("Total: $total");
+        Response response = await client.dio.post(
+            '/transfer/$username/', data: {"amount": withdraw});
+        check = true;
+
+
+        //token = response.data["token"];
+        print(withdraw);
+      }
+    }
+    on DioError catch (error) {
+      print(error);
+    }
+    return check;
+
+  }
   Future <String> SignIn(String Username, String Password) async {
     String token = '';
 
@@ -70,5 +140,16 @@ class AuthServices {
       return token;
     }
     return token;
+  }
+  Future getTransactions() async {
+    try {
+
+      Response R = await client.dio.get('/transactions');
+
+    }
+    on DioError catch (e)
+    {
+
+    }
   }
 }
