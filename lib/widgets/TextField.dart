@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class TextFieldForms extends StatelessWidget {
@@ -8,34 +7,31 @@ class TextFieldForms extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container();
   }
+
   Widget Buttons(String text) {
-    return  Center(
+    return Center(
       child: Text(
         text.toUpperCase(),
-        style: TextStyle(
-            color: Colors.white, fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       ),
     );
   }
-  Widget TextFo(String hintText, String labelText, void Function(String) OnChanged, IconData icon)
-  {
 
-      return TextField(
-        decoration: InputDecoration(
+  Widget TextFo(String hintText, String labelText,
+      void Function(String) OnChanged, IconData icon) {
+    return TextField(
+      decoration: InputDecoration(
           border: InputBorder.none,
-
           icon: Icon(
             icon,
-            color: Color(0xff4a8cff),
+            color: Color.fromRGBO(240, 123, 63, 1),
           ),
-          hintText: 'Deposit',
-          labelText: labelText,
-        ),
-        onChanged: (value) {
-         OnChanged(value);
-        },
-
+          hintText: 'Deposit amount'
+          // labelText: "Deposit amout",
+          ),
+      onChanged: (value) {
+        OnChanged(value);
+      },
     );
   }
-
 }

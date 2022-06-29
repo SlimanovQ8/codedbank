@@ -24,26 +24,28 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
-
     return MaterialApp.router(
       routeInformationParser: _router.routeInformationParser,
       routerDelegate: _router.routerDelegate,
-
-
-
     );
   }
 
   AuthProvider ap = AuthProvider();
-  final _router = GoRouter(
-    initialLocation: 1==2 ? "/homepage" : "/",
-      routes:
-  [
-
-    GoRoute(path: "/", builder: (context, state) =>  SignInPage()),
+  final _router =
+      GoRouter(initialLocation: 1 == 2 ? "/homepage" : "/", routes: [
+    GoRoute(path: "/", builder: (context, state) => SignInPage()),
     GoRoute(path: "/deposit", builder: (context, state) => deposit()),
     GoRoute(path: "/signup", builder: (context, state) => SignUpPage()),
     GoRoute(path: "/homepage", builder: (context, state) => HomePage()),
   ]);
 }
+
+
+
+// Scaffold  background color : Color.fromRGBO(45, 64, 89, 1)
+// button colors : Color.fromRGBO(234, 84, 85, 1), Color.fromRGBO(255, 212, 96, 1)
+// color for text with dark background color: Color.fromRGBO(240, 123, 63, 1)
+//
+//
+//
+//

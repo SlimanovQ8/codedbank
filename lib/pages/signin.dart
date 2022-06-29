@@ -19,7 +19,7 @@ class _SignInPageState extends State<SignInPage> {
   String Password = '';
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Color(0xff4a8cff),
+      backgroundColor: Color.fromRGBO(45, 64, 89, 1),
       body: Container(
         child: ListView(
           children: <Widget>[
@@ -30,7 +30,10 @@ class _SignInPageState extends State<SignInPage> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Color(0xff014c8f), Color(0xff014c8f)],
+                    colors: [
+                      Color.fromRGBO(234, 84, 85, 1),
+                      Color.fromRGBO(255, 212, 96, 1)
+                    ],
                   ),
                   borderRadius:
                       BorderRadius.only(bottomLeft: Radius.circular(90))),
@@ -65,19 +68,21 @@ class _SignInPageState extends State<SignInPage> {
                         borderRadius: BorderRadius.all(Radius.circular(50)),
                         color: Colors.white,
                         boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 5)
+                          BoxShadow(
+                              color: Color.fromRGBO(240, 123, 63, 1),
+                              blurRadius: 5)
                         ]),
                     child: TextField(
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.person,
-                          color: Color(0xff4a8cff),
+                          color: Color.fromRGBO(240, 123, 63, 1),
                         ),
                         hintText: 'Username',
                       ),
                       onChanged: (value) {
-                         Username = value;
+                        Username = value;
                       },
                     ),
                   ),
@@ -91,7 +96,9 @@ class _SignInPageState extends State<SignInPage> {
                         borderRadius: BorderRadius.all(Radius.circular(50)),
                         color: Colors.white,
                         boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 5)
+                          BoxShadow(
+                              color: Color.fromRGBO(240, 123, 63, 1),
+                              blurRadius: 5)
                         ]),
                     child: TextField(
                       obscureText: true,
@@ -99,7 +106,7 @@ class _SignInPageState extends State<SignInPage> {
                         border: InputBorder.none,
                         icon: Icon(
                           Icons.vpn_key,
-                          color: Color(0xff4a8cff),
+                          color: Color.fromRGBO(240, 123, 63, 1),
                         ),
                         hintText: 'Password',
                       ),
@@ -114,35 +121,35 @@ class _SignInPageState extends State<SignInPage> {
                       padding: const EdgeInsets.only(top: 16, right: 32),
                       child: Text(
                         'Forgot Password ?',
-                        style: TextStyle(color: Colors.grey),
+                        style:
+                            TextStyle(color: Color.fromRGBO(240, 123, 63, 1)),
                       ),
                     ),
                   ),
                   Spacer(),
                   InkWell(
-                    onTap: () {
-                      print(Username);
-                      print(Password);
-                      SignIn(Username, Password);
-
-                    },
-                    child: isLoading == false? Container(
-                      height: 45,
-                      width: MediaQuery.of(context).size.width / 1.2,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              Color(0xff4a8cff),
-                              Color(0xFF00abff),
-                            ],
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(50))),
-                      child: T.Buttons("Login")
-                    ):
-                        Center(
-                            child: CircularProgressIndicator(),
-                        )
-                  ),
+                      onTap: () {
+                        print(Username);
+                        print(Password);
+                        SignIn(Username, Password);
+                      },
+                      child: isLoading == false
+                          ? Container(
+                              height: 45,
+                              width: MediaQuery.of(context).size.width / 1.2,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color.fromRGBO(234, 84, 85, 1),
+                                      Color.fromRGBO(255, 212, 96, 1)
+                                    ],
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50))),
+                              child: T.Buttons("Login"))
+                          : Center(
+                              child: CircularProgressIndicator(),
+                            )),
                 ],
               ),
             ),
@@ -156,13 +163,12 @@ class _SignInPageState extends State<SignInPage> {
                   Text("Don't have an account ?"),
                   Text(
                     "Sign Up",
-                    style: TextStyle(color: Color(0xff4a8cff)),
+                    style: TextStyle(color: Color.fromRGBO(240, 123, 63, 1)),
                   ),
                 ],
               ),
               onTap: () {
-                      context.push("/signup");
-
+                context.push("/signup");
               },
             ),
           ],
@@ -170,48 +176,38 @@ class _SignInPageState extends State<SignInPage> {
       ),
     );
   }
+
   bool isLoading = false;
-  void SignIn(String name, String password) async
-  {
+  void SignIn(String name, String password) async {
     setState(() {
       isLoading = true;
     });
 
+    bool? check = await Provider.of<AuthProvider>(context, listen: false)
+        .SignIn(name, password);
 
-   bool? check = await Provider.of<AuthProvider>(context, listen: false).SignIn(name, password);
-
-   if (check == true)
-     {
-       showDialog(
-           context: context,
-           builder: (BuildContext context) =>
-               AlertDialog(
-                 title: Text("Login failed!"),
-                 content: Text("Incorrect username or password"),
-                 actions: [
-                   TextButton(
-                     style: TextButton.styleFrom(
-                         primary: Colors.blue
-                     ),
-                     onPressed: () {
-
-                       setState(() {
-                         context.pop();
-                       });
-                     },
-
-                     child: Text('Ok'),
-                   ),
-
-
-                 ],
-               )
-       );
-       isLoading = false;
-     }
-   else {
-     isLoading = false;
-     context.push('/homepage');
-   }
+    if (check == true) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Login failed!"),
+                content: Text("Incorrect username or password"),
+                actions: [
+                  TextButton(
+                    style: TextButton.styleFrom(primary: Colors.blue),
+                    onPressed: () {
+                      setState(() {
+                        context.pop();
+                      });
+                    },
+                    child: Text('Ok'),
+                  ),
+                ],
+              ));
+      isLoading = false;
+    } else {
+      isLoading = false;
+      context.push('/homepage');
+    }
   }
 }

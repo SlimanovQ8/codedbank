@@ -6,7 +6,7 @@ import 'package:codedbank/pages/deposit.dart';
 import 'package:codedbank/providers/authProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:image_picker/image_picker.dart' ;
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/TextField.dart';
@@ -25,13 +25,12 @@ String password = '';
 String Username = '';
 TextFieldForms T = TextFieldForms();
 
-
 class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     final _picker = ImagePicker();
     return Scaffold(
-      // backgroundColor: Color(0xff4a8cff),
+      backgroundColor: Color.fromRGBO(45, 64, 89, 1),
       body: Container(
         child: ListView(
           children: <Widget>[
@@ -42,7 +41,10 @@ class _SignUpPageState extends State<SignUpPage> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [Color(0xff014c8f), Color(0xff014c8f)],
+                    colors: [
+                      Color.fromRGBO(234, 84, 85, 1),
+                      Color.fromRGBO(255, 212, 96, 1)
+                    ],
                   ),
                   borderRadius:
                       BorderRadius.only(bottomLeft: Radius.circular(90))),
@@ -77,15 +79,15 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.all(Radius.circular(50)),
                         color: Colors.white,
                         boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 5)
+                          BoxShadow(
+                              color: Color.fromRGBO(240, 123, 63, 1),
+                              blurRadius: 5)
                         ]),
                     child: TextField(
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        icon: Icon(
-                          Icons.person,
-                          color: Color(0xff4a8cff),
-                        ),
+                        icon: Icon(Icons.person,
+                            color: Color.fromRGBO(240, 123, 63, 1)),
                         hintText: 'Username',
                       ),
                       onChanged: (value) {
@@ -105,16 +107,16 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.all(Radius.circular(50)),
                         color: Colors.white,
                         boxShadow: [
-                          BoxShadow(color: Colors.black12, blurRadius: 5)
+                          BoxShadow(
+                              color: Color.fromRGBO(240, 123, 63, 1),
+                              blurRadius: 5)
                         ]),
                     child: TextField(
                       obscureText: true,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        icon: Icon(
-                          Icons.vpn_key,
-                          color: Color(0xff4a8cff),
-                        ),
+                        icon: Icon(Icons.vpn_key,
+                            color: Color.fromRGBO(240, 123, 63, 1)),
                         hintText: 'Password',
                       ),
                       onChanged: (value) {
@@ -123,6 +125,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       GestureDetector(
                         onTap: () async {
@@ -130,10 +133,10 @@ class _SignUpPageState extends State<SignUpPage> {
                               source: ImageSource.gallery);
                           setState(() {
                             _image = File(image!.path);
-                           // Uint8List memoryImage = File(_image).readAsBytesSync() as ;
+                            // Uint8List memoryImage = File(_image).readAsBytesSync() as ;
 
-                          //  print(memoryImage);
-                          //  print(_image);
+                            //  print(memoryImage);
+                            //  print(_image);
                             chk = true;
                           });
                         },
@@ -141,7 +144,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           width: 80,
                           height: 80,
                           margin: const EdgeInsets.only(top: 20),
-                          decoration: BoxDecoration(color: Colors.blue[200]),
+                          decoration: BoxDecoration(
+                              color: Color.fromRGBO(45, 64, 89, 1)),
                           child: chk == true
                               ? Image.file(
                                   _image!,
@@ -150,21 +154,21 @@ class _SignUpPageState extends State<SignUpPage> {
                                   fit: BoxFit.fitHeight,
                                 )
                               : Container(
-                                  decoration:
-                                      BoxDecoration(color: Colors.blue[200]),
+                                  decoration: BoxDecoration(
+                                      color: Color.fromRGBO(45, 64, 89, 1)),
                                   width: 200,
                                   height: 200,
                                   child: Icon(
                                     Icons.camera_alt,
-                                    color: Colors.grey[800],
+                                    color: Color.fromRGBO(240, 123, 63, 1),
                                   ),
                                 ),
                         ),
                       ),
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Text("Image"),
-                      )
+                      // const Padding(
+                      //   padding: EdgeInsets.all(8.0),
+                      //   child: Text("Image"),
+                      // )
                     ],
                   ),
                   Spacer(),
@@ -172,25 +176,24 @@ class _SignUpPageState extends State<SignUpPage> {
                       onTap: () {
                         print(Username);
                         SignUp(Username, password, _image!);
-
                       },
-                      child: isLoading == false? Container(
-                          height: 45,
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Color(0xff4a8cff),
-                                  Color(0xFF00abff),
-                                ],
-                              ),
-                              borderRadius: BorderRadius.all(Radius.circular(50))),
-                          child: T.Buttons("Sign up")
-                      ):
-                      Center(
-                        child: CircularProgressIndicator(),
-                      )
-                  ),
+                      child: isLoading == false
+                          ? Container(
+                              height: 45,
+                              width: MediaQuery.of(context).size.width / 1.2,
+                              decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color.fromRGBO(234, 84, 85, 1),
+                                      Color.fromRGBO(255, 212, 96, 1)
+                                    ],
+                                  ),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50))),
+                              child: T.Buttons("Sign up"))
+                          : Center(
+                              child: CircularProgressIndicator(),
+                            )),
                 ],
               ),
             ),
@@ -204,7 +207,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   Text("Already have an account ?"),
                   Text(
                     "Sign In",
-                    style: TextStyle(color: Color(0xff4a8cff)),
+                    style: TextStyle(color: Color.fromRGBO(240, 123, 63, 1)),
                   ),
                 ],
               ),
@@ -217,19 +220,16 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
- void SignUp(String name, String password, File img) async
-  {
+
+  void SignUp(String name, String password, File img) async {
     print("j");
 
-
-      Provider.of<AuthProvider>(context, listen: false)
-          .SignUp(username: name, password: password, image: img);
+    Provider.of<AuthProvider>(context, listen: false)
+        .SignUp(username: name, password: password, image: img);
 
     setState(() {
       //isLoading = false;
       context.push("/homepage");
-
     });
   }
-
 }
