@@ -1,8 +1,10 @@
+import 'package:codedbank/pages/transactions.dart';
 import 'package:codedbank/widgets/homepagewidget.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../models/user.dart';
 import '../providers/authProvider.dart';
 
 class HomePage extends StatefulWidget {
@@ -62,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                       trailing: const Icon(Icons.account_box,
                           color: Color.fromRGBO(240, 123, 63, 1)),
                       onTap: () {
-                        context.go("/homepage");
+                        context.push("/profile");
                       },
                     ),
                     ListTile(
@@ -72,6 +74,7 @@ class _HomePageState extends State<HomePage> {
                       trailing: const Icon(Icons.add_card,
                           color: Color.fromRGBO(240, 123, 63, 1)),
                       onTap: () {
+                        //context.pop();
                         context.push("/deposit");
                       },
                     ),
@@ -111,17 +114,23 @@ class _HomePageState extends State<HomePage> {
                               color: Color.fromRGBO(240, 123, 63, 1))),
                       trailing: const Icon(Icons.logout,
                           color: Color.fromRGBO(240, 123, 63, 1)),
-                      onTap: () {
+                      onTap: () async {
                         Provider.of<AuthProvider>(context, listen: false)
                             .logout();
 
-                        context.go("/");
+                        context.go("/signin");
                       },
                     ),
                   ],
                 )),
       ),
-      body: HomePageWidget(),
+
+               body:  HomePageWidget(),
+
     );
+  }
+  Future <int> getUserInfo(int id) async {
+    return await AuthProvider().getAmount(id);
+
   }
 }

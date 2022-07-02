@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/authProvider.dart';
+import '../widgets/ContainerWidgets.dart';
 import '../widgets/TextField.dart';
 
 class Transfer extends StatefulWidget {
@@ -52,22 +53,9 @@ class _TransferState extends State<Transfer> {
                     ),
                     borderRadius:
                     BorderRadius.only(bottomLeft: Radius.circular(90))),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Spacer(),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ImageIcon(
-                        AssetImage("assets/images/codedlogo.png"),
-                        color: Colors.black,
-                        size: 160,
-                      ),
-                    ),
-                    Spacer(),
-                  ],
-                ),
-              ),
+          child: ContainerWidgets().PicWidget(),
+
+        ),
               Container(
                 height: MediaQuery.of(context).size.height / 2,
                 width: MediaQuery.of(context).size.width,
@@ -127,7 +115,7 @@ class _TransferState extends State<Transfer> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
-                            Icons.money,
+                            Icons.person,
                             color: Color.fromRGBO(240, 123, 63, 1),
                           ),
                           hintText: "Username",
@@ -143,28 +131,19 @@ class _TransferState extends State<Transfer> {
                     ),
 
                     Spacer(),
-                    InkWell(
+                    isLoading == true ? Center(
+                      child: CircularProgressIndicator(),
+                    ) :  InkWell(
                       onTap: () {
                         int? id = value.user!.id;
                         print(id);
 
                         transfer(amount, Username, id!);
                       },
-                      child: Container(
-                        child: BW.Button1("Transfer"),
-                        height: 45,
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromRGBO(234, 84, 85, 1),
-                                Color.fromRGBO(255, 212, 96, 1)
-                              ],
-                            ),
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(50))),
-
-                      ),
+                      child: BW.OrangeGradientButton(
+                        context: context,
+                        Text: "Transfer",
+                    ),
                     ),
                   ],
                 ),
@@ -177,13 +156,21 @@ class _TransferState extends State<Transfer> {
   }
 
   bool check = false;
+  bool isLoading = false;
   void transfer(int transfer, String Username, int id) async {
     print("j");
 
-    check = await Provider.of<AuthProvider>(context, listen: false)
+  setState(() {
+    isLoading = true;
+    });
+  check = await Provider.of<AuthProvider>(context, listen: false)
         .transfer(transfer, Username, id);
 
+
     if (check == true) {
+      setState(() {
+        isLoading = false;
+      });
       showDialog(
           context: context,
           builder: (BuildContext context) =>
@@ -219,11 +206,11 @@ class _TransferState extends State<Transfer> {
           builder: (BuildContext context) => AlertDialog(
             backgroundColor: Color.fromRGBO(45, 64, 89, 1),
             title: Text(
-              "Withdrw unsuccessful",
+              "Transfer unsuccessful",
               style: TextStyle(color: Color.fromRGBO(240, 123, 63, 1)),
             ),
             content: Text(
-              "balance is insufficent",
+              "balance is insufficient",
               style: TextStyle(color: Color.fromRGBO(240, 123, 63, 1)),
             ),
             actions: [

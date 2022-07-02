@@ -1,186 +1,207 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:passcode_screen/circle.dart';
+import 'package:passcode_screen/keyboard.dart';
+import 'package:passcode_screen/passcode_screen.dart';
 
-void main() => runApp(test());
+void main() => runApp(MyApp());
 
-class test extends StatelessWidget {
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height:400,
-                    child: Flexible(
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                          children: [
-                          Card(
+      title: 'Passcode Lock Screen Example',
 
-                          color: Color(0xff343b4b),
+      home: PassCodePage(title: 'Passcode Lock Screen '),
+    );
+  }
+}
 
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 10,
-                margin: EdgeInsets.all(7),
-                child: Column(
-                  children: <Widget>[
-                      ListTile(
-                        leading:
-                        ImageIcon(
-                          AssetImage("assets/images/codedlogo.png"),
+const storedPasscode = '0000';
 
-                          size: 80,
-                          color: Colors.white,
-                        ),
-                        title: Text("Card Number 4200",
+class PassCodePage extends StatefulWidget {
+  PassCodePage({Key? key, required this.title}) : super(key: key);
+  final String title;
 
+  @override
+  State<StatefulWidget> createState() => _ExampleHomePageState();
+}
 
+class _ExampleHomePageState extends State<PassCodePage> {
+  final StreamController<bool> _verificationNotifier =
+  StreamController<bool>.broadcast();
 
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20, fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
-                        //      subtitle: ,
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          //shape: BoxShape.circle,
-                          //border: Border.all(color: Colors.black,width: 0.5),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        margin: EdgeInsets.all(12.5),
-                        padding: const EdgeInsets.all(1.0),
-                        child: Row(
-                          children: <Widget>[
-                            SizedBox(
-                              width: 40,
-                            ),
-                            Expanded(
-                              child: Column(
-                                  children:<Widget>
-                                  [ Text("Total balance",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontSize: 15,
-                                          color: Colors.white,
-                                        )),
-                                    Row(
-                                        children:<Widget> [
-                                          SizedBox(
-                                            width: 25,
-                                          ),
-                                          Text(" 1000 KD",
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(fontSize: 14,
-                                                color: Colors.white,
-                                              )),
-                                          SizedBox(
-                                            width: 3,
-                                          ),
-                                          GestureDetector(child: Icon(Icons.info_outline), onTap: (){
-                                            showDialog(
-                                                context: context,
-                                                builder: (BuildContext context) =>
-                                                    AlertDialog(
-                                                      backgroundColor: Color (0xff343b4b),
-                                                      title: Text("total balance", style: TextStyle(
+  bool isAuthenticated = false;
 
-                                                          color: Color(0xff5496F4)
-                                                      ),),
-                                                      content: Text("Total balance without applying the saving rules", style: TextStyle(
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(45, 64, 89, 1),
 
-                                                          color: Color(0xff5496F4)
-                                                      ),),
-                                                      actions: [
+      appBar: AppBar(
+        title: Text(widget.title),
 
-                                                        TextButton(onPressed: () {
-                                                          Navigator.pop(context);
-                                                        },
-
-                                                          child: Text("OK", style: TextStyle(
-                                                              color: Colors.red
-                                                          ),),
-                                                        ),
-                                                      ],
-                                                    )
-                                            );
-                                          },)
-
-
-                                        ]
-                                    ),
-                                  ]
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                  children:<Widget>
-                                  [ Text("Available balance",
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontSize: 15,
-                                          color: Colors.white,
-                                        )),
-                                    SizedBox(
-                                      width: 40,
-                                    ),
-                                  ]
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-
-                  ],
-                ),
-              ),
-            ]),
-                    )
-                  ),
-                  Container(
-                    height: 200,
-                    child: GridView.builder(
-                      padding: const EdgeInsets.all(20.0),
-                      itemCount: 3,
-                      itemBuilder: (ctx, i) =>
-                          Center(
-                            child: GridTile(
-                              child: RaisedButton(
-                                  onPressed: ()
-                                  {
-                                    print("s");
-                                  },
-                                  color: Color(0xfffffafa),
-                                  child: Image.asset("assets/images/codedlogo.png", height: 120,)),
-
-
-                            ),
-                          ),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: MediaQuery
-                            .of(context)
-                            .size
-                            .width /
-                            (MediaQuery
-                                .of(context)
-                                .size
-                                .height / 1.6),
-                        crossAxisSpacing: 25,
-                        mainAxisSpacing: 12.5,
-                      ),
-                    )
-                  )
-                ],
-              ),
-            ),
+        iconTheme: IconThemeData(color: Color.fromRGBO(240, 123, 63, 1)),
+        backgroundColor: Color.fromRGBO(45, 64, 89, 1),
+      ),
+      body:
+        _showLockScreen(
+          context,
+          opaque: false,
+          cancelButton: Text(
+            'Cancel',
+            style: const TextStyle(fontSize: 16, color: Colors.white),
+            semanticsLabel: 'Cancel',
           ),
         ),
+
+
+    );
+  }
+
+  _defaultLockScreenButton(BuildContext context) => MaterialButton(
+    color: Theme.of(context).primaryColor,
+    child: Text('Open Default Lock Screen'),
+    onPressed: () {
+      _showLockScreen(
+        context,
+        opaque: false,
+        cancelButton: Text(
+          'Cancel',
+          style: const TextStyle(fontSize: 16, color: Colors.white),
+          semanticsLabel: 'Cancel',
+        ),
+      );
+    },
+  );
+
+
+
+  Widget _showLockScreen(
+      BuildContext context, {
+        required bool opaque,
+        CircleUIConfig? circleUIConfig,
+        KeyboardUIConfig? keyboardUIConfig,
+        required Widget cancelButton,
+        List<String>? digits,
+      }) {
+
+              return PasscodeScreen(
+                title: Text(
+                  'Enter App Passcode',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white, fontSize: 28),
+                ),
+                circleUIConfig: circleUIConfig,
+                keyboardUIConfig: keyboardUIConfig,
+                passwordEnteredCallback: _onPasscodeEntered,
+                cancelButton: cancelButton,
+                deleteButton: Text(
+                  'Delete',
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
+                  semanticsLabel: 'Delete',
+                ),
+                shouldTriggerVerification: _verificationNotifier.stream,
+                backgroundColor: Colors.black.withOpacity(0.8),
+                cancelCallback: _onPasscodeCancelled,
+                digits: digits,
+                passwordDigits: 4,
+                bottomWidget: _buildPasscodeRestoreButton(),
+
+        );
+  }
+
+  _onPasscodeEntered(String enteredPasscode) {
+    bool isValid = storedPasscode == enteredPasscode;
+    _verificationNotifier.add(isValid);
+    if (isValid) {
+      setState(() {
+        this.isAuthenticated = isValid;
+        context.push("/signin");
+      });
+    }
+  }
+
+  _onPasscodeCancelled() {
+    Navigator.maybePop(context);
+  }
+
+  @override
+  void dispose() {
+    _verificationNotifier.close();
+    super.dispose();
+  }
+
+  _buildPasscodeRestoreButton() => Align(
+    alignment: Alignment.bottomCenter,
+    child: Container(
+      margin: const EdgeInsets.only(bottom: 10.0, top: 20.0),
+      child: TextButton(
+        child: Text(
+          "Reset passcode",
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+              fontSize: 16,
+              color: Colors.white,
+              fontWeight: FontWeight.w300),
+        ),
+        onPressed: _resetAppPassword,
+        // splashColor: Colors.white.withOpacity(0.4),
+        // highlightColor: Colors.white.withOpacity(0.2),
+        // ),
       ),
+    ),
+  );
+
+  _resetAppPassword() {
+    Navigator.maybePop(context).then((result) {
+      if (!result) {
+        return;
+      }
+      _showRestoreDialog(() {
+        Navigator.maybePop(context);
+        //TODO: Clear your stored passcode here
+      });
+    });
+  }
+
+  _showRestoreDialog(VoidCallback onAccepted) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Reset passcode",
+            style: const TextStyle(color: Colors.black87),
+          ),
+          content: Text(
+            "Passcode reset is a non-secure operation!\n\nConsider removing all user data if this action performed.",
+            style: const TextStyle(color: Colors.black87),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            TextButton(
+              child: Text(
+                "Cancel",
+                style: const TextStyle(fontSize: 18),
+              ),
+              onPressed: () {
+                Navigator.maybePop(context);
+              },
+            ),
+            TextButton(
+              child: Text(
+                "I understand",
+                style: const TextStyle(fontSize: 18),
+              ),
+              onPressed: onAccepted,
+            ),
+          ],
+        );
+      },
     );
   }
 }

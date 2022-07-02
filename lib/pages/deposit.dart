@@ -1,3 +1,5 @@
+import 'package:codedbank/pages/transfer.dart';
+import 'package:codedbank/widgets/ContainerWidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +16,7 @@ class deposit extends StatefulWidget {
 
 int amount = 0;
 TextFieldForms T = TextFieldForms();
+
 
 class _depositState extends State<deposit> {
   @override
@@ -49,21 +52,7 @@ class _depositState extends State<deposit> {
                     ),
                     borderRadius:
                         BorderRadius.only(bottomLeft: Radius.circular(90))),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Spacer(),
-                    Align(
-                      alignment: Alignment.center,
-                      child: ImageIcon(
-                        AssetImage("assets/images/codedlogo.png"),
-                        color: Colors.black,
-                        size: 160,
-                      ),
-                    ),
-                    Spacer(),
-                  ],
-                ),
+                child: ContainerWidgets().PicWidget(),
               ),
               Container(
                 height: MediaQuery.of(context).size.height / 2,
@@ -71,62 +60,31 @@ class _depositState extends State<deposit> {
                 padding: EdgeInsets.only(top: 62),
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      width: MediaQuery.of(context).size.width / 1.2,
-                      height: 45,
-                      padding: EdgeInsets.only(
-                          top: 4, left: 16, right: 16, bottom: 4),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(50)),
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color.fromRGBO(240, 123, 63, 1),
-                                blurRadius: 5)
-                          ]),
-                      child: T.TextFo(
+                    T.GradientTextField(
+                      context: context,
+                      widget: T.TextFo(
                           "Enter deposit amount",
                           "Deposit amount",
-                          (value) => setState(() {
-                                amount = int.parse(value);
-                              }),
+                              (value) => setState(() {
+                            amount = int.parse(value);
+                          }),
                           Icons.money),
                     ),
+
                     Spacer(),
-                    InkWell(
+                   isLoading == true ? Center(
+                     child: CircularProgressIndicator(),
+                   ) :  InkWell(
                       onTap: () {
                         int? id = value.user!.id;
 
                         deposit(amount, id!);
                       },
-                      child: Container(
-                        child: T.Buttons("Deposit"),
-                        height: 45,
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromRGBO(234, 84, 85, 1),
-                                Color.fromRGBO(255, 212, 96, 1)
-                              ],
-                            ),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(50))),
-                        // // child: ElevatedButton(
-                        //   onPressed: () {
-                        //     int? id = value.user!.id;
-
-                        //     deposit(amount, id!);
-                        //   },
-                        //   style: ElevatedButton.styleFrom(),
-                        //   child: Text(
-                        //     'Deposit'.toUpperCase(),
-                        //     style: TextStyle(
-                        //         color: Colors.white, fontWeight: FontWeight.bold),
-                        //   ),
-                        // ),
-                      ),
+                      child: BW.OrangeGradientButton(
+                        context: context,
+                        Text: "Deposit",
                     ),
+                   ),
                   ],
                 ),
               ),
@@ -136,14 +94,21 @@ class _depositState extends State<deposit> {
       ),
     );
   }
-
+bool isLoading = false;
   void deposit(int deposit, int id) async {
     print("j");
 
+    setState(() {
+      isLoading = true;
+    });
     bool? check = await Provider.of<AuthProvider>(context, listen: false)
         .Deposit(deposit, id);
 
+
     if (check == true) {
+      setState(() {
+        isLoading = false;
+      });
       showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(

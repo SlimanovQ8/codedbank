@@ -15,6 +15,7 @@ class AuthProvider extends ChangeNotifier {
   User? user;
   AuthServices AS = AuthServices();
   List <Transctions> transctions = [];
+  int amount = 0;
   bool check = false;
   // authProvider() {
   //   SharedPreferences.getInstance().then((value) {
@@ -37,6 +38,17 @@ class AuthProvider extends ChangeNotifier {
     setToken(token);
     notifyListeners();
   }
+  Future <int> getAmount(int id) async
+  {
+     amount = await AS.getBalance(id);
+
+    print("amount:::: $amount");
+    setAmount(amount);
+
+    notifyListeners();
+    return amount;
+
+  }
   Future <bool?> SignIn(String Username, String Password) async {
 
     token = await AuthServices().SignIn(Username, Password);
@@ -57,6 +69,28 @@ class AuthProvider extends ChangeNotifier {
     check = await AuthServices().deposit(deposit: deposit, id: id);
     print(token);
 
+      user = User(id: user!.id,  username: user!.username, password: user!.password, balance: user!.balance!+deposit, image: user!.image );
+
+
+
+    //user = await User.fromJson(Jwt.parseJwt(token));
+
+    // uuser = User(username: Username, password: Password );
+    setToken(token);
+    print(token);
+    print(user!.balance!);
+
+    notifyListeners();
+
+    return check;
+  }
+
+
+  Future<bool?> update(String username, String password, File image) async {
+
+    check = await AuthServices().update(username: username, password: password, image: image);
+    print(token);
+
 
     //user = await User.fromJson(Jwt.parseJwt(token));
 
@@ -67,8 +101,6 @@ class AuthProvider extends ChangeNotifier {
 
     return check;
   }
-
-
   Future<bool> withdraw(int withdraw, int id) async {
 
     check = await AuthServices().withdraw(withdraw: withdraw, id: id);
@@ -125,6 +157,10 @@ class AuthProvider extends ChangeNotifier {
     print(x);
   }
 
+
+  void setAmount(int amount) async {
+    this.amount = amount;
+  }
   void getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     token = prefs.getString('token') ?? "";

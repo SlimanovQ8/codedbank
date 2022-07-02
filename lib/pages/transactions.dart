@@ -1,4 +1,7 @@
+import 'package:codedbank/widgets/ListViewWidgets.dart';
+import 'package:codedbank/widgets/TextField.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../models/transactions.dart';
@@ -9,31 +12,66 @@ class transactions extends StatefulWidget {
   @override
   _transactionsState createState() => _transactionsState();
 }
-Future <List<Transctions>> getTransactions(int index) async {
-   List <Transctions> t = [];
-  if (index == 1)
-    {
-      t = AuthProvider().transctions.where((element) => element.type == "deposit").toList();
+var trasactions = AuthProvider().transctions.toList();
 
-    }
-
-   else if (index == 2)
-   {
-     t = AuthProvider().transctions.where((element) => element.type == "transfer").toList();
-
-   }
-   if (index == 3)
-   {
-     t = AuthProvider().transctions.where((element) => element.type == "withdraw").toList();
-
-   }
-   return t;
-}
 class _transactionsState extends State<transactions> {
 
-  String filter = "all";
+  bool isEmpty = true;
+  String searchAll = "";
+  int index = 0;
 
   @override
+  MakeEmpty()
+  {
+    setState(() {
+      searchAll = "";
+      isEmpty = true;
+    });
+  }
+    ChangeList()
+  {
+
+    setState(() {
+      if(index == 0)
+        {
+          searchAll.isEmpty ?
+          trasactions = context.read<AuthProvider>().transctions.toList()
+              :
+          trasactions = context.read<AuthProvider>().transctions.where((element) => element.amount == int.parse(searchAll)).toList();
+
+
+      }
+
+      else if(index == 1)
+        {
+          searchAll.isEmpty ?
+          trasactions = context.read<AuthProvider>().transctions.where((element) => element.type == "deposit").toList()
+              :
+          trasactions = context.read<AuthProvider>().transctions.where((element) => element.amount == int.parse(searchAll) && element.type == "deposit").toList();
+
+        }
+
+      else if(index == 2)
+      {
+
+        searchAll.isEmpty ?
+        trasactions = context.read<AuthProvider>().transctions.where((element) => element.type == "transfer").toList()
+            :
+        trasactions = context.read<AuthProvider>().transctions.where((element) => element.amount == int.parse(searchAll) && element.type == "transfer").toList();
+      }
+
+      else if(index == 3)
+      {
+        searchAll.isEmpty ?
+        trasactions = context.read<AuthProvider>().transctions.where((element) => element.type == "withdraw").toList()
+            :
+        trasactions = context.read<AuthProvider>().transctions.where((element) => element.amount == int.parse(searchAll) && element.type == "withdraw").toList();
+
+      }
+
+      isEmpty = false;
+    }) ;
+  }
   Widget build(BuildContext context) {
 
 
@@ -54,7 +92,12 @@ class _transactionsState extends State<transactions> {
           ),
           bottom: TabBar(
             onTap: (i){
+              print(i);
 
+              setState(() {
+                index = i;
+                ChangeList();
+              });
             },
             tabs: [
               Tab(text: "All",),
@@ -76,85 +119,47 @@ class _transactionsState extends State<transactions> {
                  child: CircularProgressIndicator(),
                  );
                  }
+
                  else
                  {
-
-                   // if(filter != "all"){
-                   //   transactions =
-                   // }
+                   if(isEmpty) {
+                     trasactions = context
+                         .read<AuthProvider>()
+                         .transctions
+                         .toList();
+                   }
+                   //ChangeList();
                  return Consumer<AuthProvider>(
                  builder:  (context, value, child) =>
-                     ListView.separated(
-                         separatorBuilder: (context, index) => Divider(
-                           color: Colors.black,
+
+                     Column(
+
+                       children: [
+                         TextFieldForms().SearchTextField(
+                           context: context,
+                           searchAll: searchAll,
+                           OnChanged: (value) {
+                           searchAll = value;
+                           if(searchAll.isEmpty)
+                             {
+                               MakeEmpty();
+                             }
+                           },
+                             isEmpty: isEmpty,
+                             onTap: ChangeList,
+                             onPressed: MakeEmpty,
+                             trasactions: trasactions,
                          ),
-                         itemCount: value.transctions.length,
-                         itemBuilder: (context, int i) {
-                           final now = new DateTime.now();
-
-
-                           bool red = false;
-                           bool orange = false;
-                           bool green = false;
-
-                           return Padding(
-                             padding: EdgeInsets.symmetric(
-                                 vertical: 0.0, horizontal: 20.0),
-                             child: Card(
-                               elevation: 8.0,
-                               margin: new EdgeInsets.symmetric(
-                                   horizontal: 10.0, vertical: 6.0),
-                               child: Container(
-                                 height: 80,
-                                 decoration: BoxDecoration(
-                                     color: value.transctions[i].type == "deposit" ? Colors.green : value.transctions[i].type == "withdraw" ? Colors.red : Color.fromRGBO(240, 123, 63, 1)
-                                 ),
-                                 child: ListTile(
-                                   trailing: Row(
-                                     mainAxisSize: MainAxisSize.min,
-                                     children: <Widget>[
-                                       /*IconButton(
-                                           icon: Icon(Icons.update,
-                                               color: green == true
-                                                   ? Colors.green
-                                                   : orange == true
-                                                   ? Colors.orange
-                                                   : Colors.red,
-                                               size: 40.0),
-                                           onPressed: () {}
-                                       ),*/
-                                     ],
-                                   ),
-                                   leading: Container(
-                                     padding: EdgeInsets.only(right: 12.0),
-                                     decoration: new BoxDecoration(
-                                         border: new Border(
-                                             right: new BorderSide(
-                                                 width: 1.0,
-                                                 color: Colors.black))),
-                                     child: Icon(
-                                       value.transctions[i].type == "deposit" ? Icons.call_received : value.transctions[i].type == "withdraw"  ? Icons.call_made : Icons.change_circle,
-
-
-                                       size: 35,
-                                     ),
-                                   ),
-                                   title: Text(
-                                     value.transctions[i].type,
-                                     style: TextStyle(color: Colors.black),
-                                   ),
-                                   subtitle: Text(
-                                     "t",
-                                     style: TextStyle(color: Colors.black),
-                                   ),
-                                   onTap: () {
-
-                                   },
-                                 ),
-                               ),
-                             ),
-                           );
-                         })
+                         Expanded(
+                           child: trasactions.isEmpty ? Center(
+                               child: Text("There are no transactions ", style: TextStyle(
+                                   fontSize: 18,
+                                   color:  Colors.white
+                               ),)
+                           ) :  ListView1(trasactions: trasactions)
+                         ),
+                       ],
+                     )
 
 
                  );
@@ -175,82 +180,47 @@ class _transactionsState extends State<transactions> {
               }
               else
               {
-                var trasactions = context.read<AuthProvider>().transctions.where((element) => element.type == "deposit").toList();
+                if(isEmpty || searchAll.isEmpty) trasactions = context.read<AuthProvider>().transctions.where((element) => element.type == "deposit").toList();
 
-                return Consumer<AuthProvider>(
-                    builder:  (context, value, child) =>
-                        ListView.separated(
-                            separatorBuilder: (context, index) => Divider(
-                              color: Colors.black,
-                            ),
-                            itemCount: trasactions.length,
-                            itemBuilder: (context, int i) {
-                              final now = new DateTime.now();
+                else 
+                  trasactions = 
+                      context.read<AuthProvider>().
+                      transctions.where((element) => element.type == "deposit" && element.amount == int.parse(searchAll)).toList();
 
+                return Column(
+                  children: [
+                    TextFieldForms().SearchTextField(
+                      context: context,
+                      searchAll: searchAll,
+                      OnChanged:
+                          (value) {
+                        searchAll = value;
+                        if(searchAll.isEmpty)
+                        {
+                          MakeEmpty();
+                        }
+                      },
+                      isEmpty: isEmpty,
+                      onTap: ChangeList,
+                      onPressed: MakeEmpty,
+                      trasactions: trasactions,
+                    ),
 
-                              bool red = false;
-                              bool orange = false;
-                              bool green = false;
-
-                              return Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: 0.0, horizontal: 20.0),
-                                child: Card(
-                                  elevation: 8.0,
-                                  margin: new EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 6.0),
-                                  child: Container(
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                        color: trasactions[i].type == "deposit" ? Colors.green : trasactions[i].type == "withdraw" ? Colors.red : Color.fromRGBO(240, 123, 63, 1)
-                                    ),
-                                    child: ListTile(
-                                      trailing: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                          /*IconButton(
-                                           icon: Icon(Icons.update,
-                                               color: green == true
-                                                   ? Colors.green
-                                                   : orange == true
-                                                   ? Colors.orange
-                                                   : Colors.red,
-                                               size: 40.0),
-                                           onPressed: () {}
-                                       ),*/
-                                        ],
-                                      ),
-                                      leading: Container(
-                                        padding: EdgeInsets.only(right: 12.0),
-                                        decoration: new BoxDecoration(
-                                            border: new Border(
-                                                right: new BorderSide(
-                                                    width: 1.0,
-                                                    color: Colors.black))),
-                                        child: Icon(
-                                          trasactions[i].type == "deposit" ? Icons.call_received : trasactions[i].type == "withdraw"  ? Icons.call_made : Icons.change_circle,
-
-                                          size: 35,
-                                        ),
-                                      ),
-                                      title: Text(
-                                        trasactions[i].type,
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      subtitle: Text(
-                                        "t",
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                      onTap: () {
-
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              );
-                            })
+                    Expanded(
+                      child:
+                      trasactions.isEmpty ? Center(
+                          child: Text("There are no transactions ", style: TextStyle(
+                            fontSize: 18,
+                            color:  Colors.white
+                          ),)
+                      ) : Consumer<AuthProvider>(
+                          builder:  (context, value, child) =>
+                              ListView1(trasactions: trasactions)
 
 
+                      ),
+                    ),
+                  ],
                 );
 
 
@@ -267,82 +237,48 @@ class _transactionsState extends State<transactions> {
                    }
                    else
                    {
-                     var trasactions = context.read<AuthProvider>().transctions.where((element) => element.type == "transfer").toList();
+                     if(isEmpty || searchAll.isEmpty) trasactions = context.read<AuthProvider>().transctions.where((element) => element.type == "transfer").toList();
 
-                     return Consumer<AuthProvider>(
-                         builder:  (context, value, child) =>
-                             ListView.separated(
-                                 separatorBuilder: (context, index) => Divider(
-                                   color: Colors.black,
-                                 ),
-                                 itemCount:  trasactions.length ,
-                                 itemBuilder: (context, int i) {
-                                   final now = new DateTime.now();
+                     else
+                       trasactions =
+                           context.read<AuthProvider>().
+                           transctions.where((element) => element.type == "transfer" && element.amount == int.parse(searchAll)).toList();
 
-
-                                   bool red = false;
-                                   bool orange = false;
-                                   bool green = false;
-
-                                   return Padding(
-                                     padding: EdgeInsets.symmetric(
-                                         vertical: 0.0, horizontal: 20.0),
-                                     child: Card(
-                                       elevation: 8.0,
-                                       margin: new EdgeInsets.symmetric(
-                                           horizontal: 10.0, vertical: 6.0),
-                                       child: Container(
-                                         height: 80,
-                                         decoration: BoxDecoration(
-                                             color: trasactions[i].type == "deposit" ? Colors.green : trasactions[i].type == "withdraw" ? Colors.red : Color.fromRGBO(240, 123, 63, 1)
-                                         ),
-                                         child: ListTile(
-                                           trailing: Row(
-                                             mainAxisSize: MainAxisSize.min,
-                                             children: <Widget>[
-                                               /*IconButton(
-                                           icon: Icon(Icons.update,
-                                               color: green == true
-                                                   ? Colors.green
-                                                   : orange == true
-                                                   ? Colors.orange
-                                                   : Colors.red,
-                                               size: 40.0),
-                                           onPressed: () {}
-                                       ),*/
-                                             ],
-                                           ),
-                                           leading: Container(
-                                             padding: EdgeInsets.only(right: 12.0),
-                                             decoration: new BoxDecoration(
-                                                 border: new Border(
-                                                     right: new BorderSide(
-                                                         width: 1.0,
-                                                         color: Colors.black))),
-                                             child: Icon(
-                                               trasactions[i].type == "deposit" ? Icons.call_received : trasactions[i].type == "withdraw"  ? Icons.call_made : Icons.change_circle,
-
-                                               size: 35,
-                                             ),
-                                           ),
-                                           title: Text(
-                                             trasactions[i].type,
-                                             style: TextStyle(color: Colors.black),
-                                           ),
-                                           subtitle: Text(
-                                             "t",
-                                             style: TextStyle(color: Colors.black),
-                                           ),
-                                           onTap: () {
-
-                                           },
-                                         ),
-                                       ),
-                                     ),
-                                   );
-                                 })
+                     return Column(
+                       children: [
+                         TextFieldForms().SearchTextField(context: context,
+                           searchAll: searchAll,
+                           OnChanged:
+                               (value) {
+                             searchAll = value;
+                             if(searchAll.isEmpty)
+                             {
+                               MakeEmpty();
+                             }
+                           },
 
 
+                           isEmpty: isEmpty,
+                           onTap: ChangeList,
+                           onPressed: MakeEmpty,
+                           trasactions: trasactions,
+                         ),
+
+                         Expanded(
+                           child:
+                           trasactions.isEmpty ? Center(
+                               child: Text("There are no transactions ", style: TextStyle(
+                                   fontSize: 18,
+                                   color:  Colors.white
+                               ),)
+                           ) :Consumer<AuthProvider>(
+                               builder:  (context, value, child) =>
+                                   ListView1(trasactions: trasactions)
+
+
+                           ),
+                         ),
+                       ],
                      );
 
 
@@ -359,82 +295,48 @@ class _transactionsState extends State<transactions> {
                    }
                    else
                    {
-                     var trasactions = context.read<AuthProvider>().transctions.where((element) => element.type == "withdraw").toList();
+                     if(isEmpty || searchAll.isEmpty) trasactions = context.read<AuthProvider>().transctions.where((element) => element.type == "withdraw").toList();
 
-                     return Consumer<AuthProvider>(
-                         builder:  (context, value, child) =>
-                             ListView.separated(
-                                 separatorBuilder: (context, index) => Divider(
-                                   color: Colors.black,
-                                 ),
-                                 itemCount: trasactions.length,
-                                 itemBuilder: (context, int i) {
-                                   final now = new DateTime.now();
+                     else
+                       trasactions =
+                           context.read<AuthProvider>().
+                           transctions.where((element) => element.type == "withdraw" && element.amount == int.parse(searchAll)).toList();
 
-
-                                   bool red = false;
-                                   bool orange = false;
-                                   bool green = false;
-
-                                   return Padding(
-                                     padding: EdgeInsets.symmetric(
-                                         vertical: 0.0, horizontal: 20.0),
-                                     child: Card(
-                                       elevation: 8.0,
-                                       margin: new EdgeInsets.symmetric(
-                                           horizontal: 10.0, vertical: 6.0),
-                                       child: Container(
-                                         height: 80,
-                                         decoration: BoxDecoration(
-                                             color: trasactions[i].type == "deposit" ? Colors.green : trasactions[i].type == "withdraw" ? Colors.red : Color.fromRGBO(240, 123, 63, 1)
-                                         ),
-                                         child: ListTile(
-                                           trailing: Row(
-                                             mainAxisSize: MainAxisSize.min,
-                                             children: <Widget>[
-                                               /*IconButton(
-                                           icon: Icon(Icons.update,
-                                               color: green == true
-                                                   ? Colors.green
-                                                   : orange == true
-                                                   ? Colors.orange
-                                                   : Colors.red,
-                                               size: 40.0),
-                                           onPressed: () {}
-                                       ),*/
-                                             ],
-                                           ),
-                                           leading: Container(
-                                             padding: EdgeInsets.only(right: 12.0),
-                                             decoration: new BoxDecoration(
-                                                 border: new Border(
-                                                     right: new BorderSide(
-                                                         width: 1.0,
-                                                         color: Colors.black))),
-                                             child: Icon(
-                                               trasactions[i].type == "deposit" ? Icons.call_received : trasactions[i].type == "withdraw"  ? Icons.call_made : Icons.change_circle,
-
-                                               size: 35,
-                                             ),
-                                           ),
-                                           title: Text(
-                                             trasactions[i].type,
-                                             style: TextStyle(color: Colors.black),
-                                           ),
-                                           subtitle: Text(
-                                             "t",
-                                             style: TextStyle(color: Colors.black),
-                                           ),
-                                           onTap: () {
-
-                                           },
-                                         ),
-                                       ),
-                                     ),
-                                   );
-                                 })
+                     return Column(
+                       children: [
+                         TextFieldForms().SearchTextField(context: context,
+                           searchAll: searchAll,
+                           OnChanged:
+                               (value) {
+                             searchAll = value;
+                             if(searchAll.isEmpty)
+                             {
+                               MakeEmpty();
+                             }
+                           },
 
 
+                           isEmpty: isEmpty,
+                           onTap: ChangeList,
+                           onPressed: MakeEmpty,
+                           trasactions: trasactions,
+                         ),
+
+                         Expanded(
+                           child:
+                           trasactions.isEmpty ? Center(
+                               child: Text("There are no transfers ", style: TextStyle(
+                                   fontSize: 18,
+                                   color:  Colors.white
+                               ),)
+                           ) :Consumer<AuthProvider>(
+                               builder:  (context, value, child) =>
+                                  ListView1(trasactions: trasactions)
+
+
+                           ),
+                         ),
+                       ],
                      );
 
 

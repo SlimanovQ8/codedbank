@@ -60,5 +60,23 @@ class ContainerWidgets extends StatelessWidget {
 
     );
   }
+  Widget PicWidget()
+  {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Spacer(),
+        Align(
+          alignment: Alignment.center,
+          child: ImageIcon(
+            AssetImage("assets/images/codedlogo.png"),
+            color: Colors.black,
+            size: 160,
+          ),
+        ),
+        Spacer(),
+      ],
+    );
+  }
 
 }

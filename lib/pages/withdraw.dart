@@ -99,6 +99,7 @@ class _WithdrawState extends State<Withdraw> {
                           setState(() {
                             amount = int.parse(value);
                           });
+
                         },
                         keyboardType: TextInputType.number,
                         inputFormatters: <TextInputFormatter> [
@@ -108,26 +109,18 @@ class _WithdrawState extends State<Withdraw> {
                       ),
                     ),
                     Spacer(),
+                    isLoading == true ? Center(
+                      child: CircularProgressIndicator(),
+                    ):
                     InkWell(
                       onTap: () {
                         int? id = value.user!.id;
 
                         withdraw(amount, id!);
                       },
-                      child: Container(
-                        child: BW.Button1("Withdraw"),
-                        height: 45,
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromRGBO(234, 84, 85, 1),
-                                Color.fromRGBO(255, 212, 96, 1)
-                              ],
-                            ),
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(50))),
-
+                      child: BW.OrangeGradientButton(
+                          context: context,
+                          Text: "Withdraw",
                       ),
                     ),
                   ],
@@ -141,13 +134,20 @@ class _WithdrawState extends State<Withdraw> {
   }
 
   bool check = false;
+  bool isLoading = false;
   void withdraw(int withdraw, int id) async {
     print("j");
 
+    setState(() {
+      isLoading = true;
+    });
      check = await Provider.of<AuthProvider>(context, listen: false)
         .withdraw(withdraw, id);
 
     if (check == true) {
+      setState(() {
+        isLoading = false;
+      });
       showDialog(
           context: context,
           builder: (BuildContext context) =>
@@ -178,16 +178,17 @@ class _WithdrawState extends State<Withdraw> {
               ));
     }
       else {
+        isLoading = false;
       showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
             backgroundColor: Color.fromRGBO(45, 64, 89, 1),
             title: Text(
-              "Withdrw unsuccessful",
+              "Withdraw unsuccessful",
               style: TextStyle(color: Color.fromRGBO(240, 123, 63, 1)),
             ),
             content: Text(
-              "balance is insufficent",
+              "balance is insufficient",
               style: TextStyle(color: Color.fromRGBO(240, 123, 63, 1)),
             ),
             actions: [

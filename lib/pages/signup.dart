@@ -133,10 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               source: ImageSource.gallery);
                           setState(() {
                             _image = File(image!.path);
-                            // Uint8List memoryImage = File(_image).readAsBytesSync() as ;
 
-                            //  print(memoryImage);
-                            //  print(_image);
                             chk = true;
                           });
                         },

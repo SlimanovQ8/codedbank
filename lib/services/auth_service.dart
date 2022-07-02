@@ -11,6 +11,7 @@ class AuthServices {
     late String token;
 
 
+
     try {
       FormData data = FormData.fromMap({
         "username": username,
@@ -35,11 +36,42 @@ class AuthServices {
 
 
       Response R = await client.dio.get('/');
+      int newID = id - 1;
 
-      print(R.data[id--]['balance']);
-      int total = deposit + R.data[id--]['balance'];
+      print(R.data[newID]['balance']);
+      int total = deposit + R.data[newID]['balance'];
       print("Total: $total");
       Response response = await client.dio.put('/deposit/', data: {"amount": deposit  });
+      check = true;
+
+
+
+
+
+      //token = response.data["token"];
+      print(deposit);
+    } on DioError catch (error) {
+      print(error);
+    }
+    return check;
+  }
+
+  Future<bool> update({required String username , required String password, required File image}) async {
+    late String token;
+    bool check = false;
+
+    try {
+
+
+      FormData data = FormData.fromMap({
+        "username": username,
+        "password": password,
+
+        "image": await MultipartFile.fromFile(image.path),
+      });
+
+
+      Response response = await client.dio.put('/update/', data: data);
       check = true;
 
 
@@ -52,7 +84,6 @@ class AuthServices {
     return check;
   }
 
-
   Future<bool> withdraw({required withdraw, required id}) async {
     late String token;
     bool check = false;
@@ -61,14 +92,16 @@ class AuthServices {
     try {
       Response R = await client.dio.get('/');
 
-      print(R.data[id--]['balance']);
-      int amount = R.data[id--]['balance'];
+      int newID = id - 1;
+
+      print(R.data[newID]['balance']);
+      int amount = R.data[newID]['balance'];
       if (amount < withdraw) {
         print("Check: $check");
         return check;
       }
       else {
-        int total = withdraw + R.data[id--]['balance'];
+        int total = withdraw + R.data[newID]['balance'];
         print("Total: $total");
         Response response = await client.dio.put(
             '/withdraw/', data: {"amount": withdraw});
@@ -126,8 +159,8 @@ class AuthServices {
     String token = '';
 
     try {
-      print("SErvice");
       Response Res = await client.dio.post('/signin', data: {"username": Username, "password": Password});
+      print("SErvice");
 
        print(Res.statusCode);
       print('ed');
@@ -156,5 +189,18 @@ class AuthServices {
 
     }
     return [];
+  }
+
+  Future <int> getBalance(int id) async {
+    Response R = await client.dio.get('/');
+
+
+
+    int newID = id - 1;
+
+    print(R.data[newID]['balance']);
+    int amount = R.data[newID]['balance'];
+    print("Services{ $amount");
+    return amount;
   }
 }

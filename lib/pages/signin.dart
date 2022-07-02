@@ -79,6 +79,7 @@ class _SignInPageState extends State<SignInPage> {
                           Icons.person,
                           color: Color.fromRGBO(240, 123, 63, 1),
                         ),
+
                         hintText: 'Username',
                       ),
                       onChanged: (value) {
